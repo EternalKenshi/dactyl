@@ -67,6 +67,12 @@ class TestDactyl(unittest.TestCase):
         assert os.path.isfile("out/filter-examples-include_code.html")
         assert os.path.isfile("out/filter-examples-multicode_tabs.html")
 
+    def test_dactyl_link_checker(self):
+        assert subprocess.check_call(["dactyl_link_checker"]) == 0
+
+    def test_dactyl_style_checker(self):
+        print(subprocess.check_call(["dactyl_style_checker","-t","filterdemos"]))
+
     #P2 tests defined below
     def test_elastic_search_default(self):
         subprocess.check_call(["dactyl_build","--es"])
@@ -84,7 +90,7 @@ class TestDactyl(unittest.TestCase):
         assert os.path.isfile("out/lists-and-codeblocks.json")
 
     def test_elastic_search_single_page(self):
-        subprocess.check_call(["dactyl_build","--es","--pages","content/gfm-compat.json"])
+        subprocess.check_call(["dactyl_build","--es","--pages","content/gfm-compat.md"])
         assert os.path.isfile("out/gfm-compat.json")
 
     def test_generate_markdown(self):
@@ -131,5 +137,4 @@ if __name__ == '__main__':
         os.chdir("examples")
     elif os.path.split(os.getcwd())=="tests":
         os.chdir("../examples")
-    #unittest.main()
-    TestDactyl().test_elastic_search_default()
+    unittest.main()
