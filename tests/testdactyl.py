@@ -20,6 +20,9 @@ class TestDactyl(unittest.TestCase):
 
     #P1 tests defined below
 
+    def tearDown(self):
+        os.chdir("../examples")
+
     def test_list(self):
         subprocess.check_output(["dactyl_build","-l"])
 
@@ -72,7 +75,14 @@ class TestDactyl(unittest.TestCase):
         #Assert that the link checker exits with exit code 0, meaning that all links were validated successfully.
         assert subprocess.check_call(["dactyl_link_checker"]) == 0
 
+    def test_dactyl_link_checker_with_broken_links(self):
+        os.chdir("../tests")
+        assert subprocess.call(["dactyl_link_checker"]) != 0
+
     def test_dactyl_style_checker(self):
+        assert subprocess.check_call(["dactyl_style_checker","-t","conditionals"]) == 0
+
+    def test_dactyl_style_checker_with_known_issues(self):
         #Assert that the style checker exits with a non-zero exit code, meaning it has found a styling error.
         assert subprocess.call(["dactyl_style_checker","-t","filterdemos"]) != 0
 
@@ -143,3 +153,4 @@ if __name__ == '__main__':
     elif os.path.split(os.getcwd())=="tests":
         os.chdir("../examples")
     unittest.main()
+    #TestDactyl().test_dactyl_link_checker_with_broken_links()
